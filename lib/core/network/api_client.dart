@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../api/interceptors/api_log_interceptor.dart';
+import '../auth/auth_session.dart';
 import '../storage/storage_service.dart';
 import '../api/interceptors/auth_interceptor.dart';
 import '../api/interceptors/retry_interceptor.dart';
@@ -34,19 +36,19 @@ final apiClientProvider = Provider<Dio>((ref) {
 
   // Add interceptors
   // Order: Auth (Inject Token) -> Sign (Inject Params & Sign) -> Retry -> Log
-  dio.interceptors.add(AuthInterceptor(storageService, dio));
+  dio.interceptors.add(
+    AuthInterceptor(
+      storageService,
+      dio,
+      () => ref.read(authSessionProvider.notifier).clear(),
+    ),
+  );
   dio.interceptors.add(SignInterceptor());
   dio.interceptors.add(RetryInterceptor(dio));
 
   // Add logging interceptor
   if (kDebugMode) {
-    dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      requestHeader: true,
-      responseHeader: true,
-      error: true,
-    ));
+    dio.interceptors.add(ApiLogInterceptor());
   }
 
   return dio;

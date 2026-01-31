@@ -1,25 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../auth/auth_session.dart';
 import '../storage/storage_service.dart';
 import 'interceptors/auth_interceptor.dart';
+import 'interceptors/api_log_interceptor.dart';
 import 'interceptors/sign_interceptor.dart';
 // import 'interceptors/log_interceptor.dart'; // Create if needed
 
 final httpServiceProvider = Provider<HttpService>((ref) {
   final storage = ref.watch(storageServiceProvider);
-  return HttpService(storage);
+  return HttpService(
+    storage,
+    onUnauthorized: () => ref.read(authSessionProvider.notifier).clear(),
+  );
 });
 
 class HttpService {
   final StorageService _storage;
+  final Future<void> Function() _onUnauthorized;
   late final Dio _dio;
 
-  // Base URL should be in config/env
-  static const String _baseUrl = 'http://localhost:3000/api'; // For iOS simulator use localhost, Android 10.0.2.2
+  static const String _baseUrlOverride = String.fromEnvironment('API_BASE_URL', defaultValue: '');
 
-  HttpService(this._storage) {
+  HttpService(this._storage, {required Future<void> Function() onUnauthorized})
+      : _onUnauthorized = onUnauthorized {
+    final baseUrl = _baseUrlOverride.isNotEmpty ? _baseUrlOverride : _defaultBaseUrl();
     _dio = Dio(BaseOptions(
-      baseUrl: _baseUrl,
+      baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       headers: {
@@ -30,21 +38,10 @@ class HttpService {
 
     // Interceptors
     _dio.interceptors.addAll([
-      // 1. Sign (Public params + Signature)
       SignInterceptor(),
-      
-      // 2. Auth (Token Injection + Refresh)
-      AuthInterceptor(_storage, _dio),
-      
-      // 3. Log (Optional)
-      LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-      ),
+      AuthInterceptor(_storage, _dio, _onUnauthorized),
+      if (kDebugMode)
+        ApiLogInterceptor(),
     ]);
   }
 
@@ -84,5 +81,11 @@ class HttpService {
     Options? options,
   }) {
     return _dio.delete<T>(path, data: data, queryParameters: queryParameters, options: options);
+  }
+
+  String _defaultBaseUrl() {
+    if (kIsWeb) return 'http://localhost:3000/api';
+    if (defaultTargetPlatform == TargetPlatform.android) return 'http://10.0.2.2:3000/api';
+    return 'http://localhost:3000/api';
   }
 }

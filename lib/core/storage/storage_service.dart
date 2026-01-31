@@ -11,6 +11,8 @@ class StorageService {
   static const _accessTokenKey = 'access_token';
   static const _refreshTokenKey = 'refresh_token';
   static const _hasSeenOnboardingKey = 'has_seen_onboarding';
+  static const _selectedPetIdKey = 'selected_pet_id';
+  static const _selectedPetNameKey = 'selected_pet_name';
 
   Future<void> saveAccessToken(String token) async {
     await _storage.write(key: _accessTokenKey, value: token);
@@ -47,5 +49,30 @@ class StorageService {
   Future<bool> getHasSeenOnboarding() async {
     final raw = await _storage.read(key: _hasSeenOnboardingKey);
     return raw == '1';
+  }
+
+  Future<void> setSelectedPet({
+    required int id,
+    required String name,
+  }) async {
+    await _storage.write(key: _selectedPetIdKey, value: id.toString());
+    await _storage.write(key: _selectedPetNameKey, value: name);
+  }
+
+  Future<int?> getSelectedPetId() async {
+    final raw = await _storage.read(key: _selectedPetIdKey);
+    if (raw == null || raw.isEmpty) return null;
+    return int.tryParse(raw);
+  }
+
+  Future<String?> getSelectedPetName() async {
+    final raw = await _storage.read(key: _selectedPetNameKey);
+    if (raw == null || raw.isEmpty) return null;
+    return raw;
+  }
+
+  Future<void> clearSelectedPet() async {
+    await _storage.delete(key: _selectedPetIdKey);
+    await _storage.delete(key: _selectedPetNameKey);
   }
 }

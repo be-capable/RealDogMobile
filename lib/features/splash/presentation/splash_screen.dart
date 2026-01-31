@@ -32,7 +32,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     final hasSeenOnboarding = await storage.getHasSeenOnboarding();
     if (!mounted) return;
-    context.go(hasSeenOnboarding ? '/pets' : '/onboarding');
+    context.go(hasSeenOnboarding ? '/translate' : '/onboarding');
   }
 
   @override
@@ -40,15 +40,47 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: ClayContainer(
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            color: AppTheme.white,
-            child: const CircularProgressIndicator(
-              strokeWidth: 4,
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClayContainer(
+                width: 128,
+                height: 128,
+                borderRadius: 32,
+                color: AppTheme.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: Image.asset(
+                    'assets/images/app_icon_512.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppTheme.spaceLG),
+              Text(
+                'RealDog',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
+              const SizedBox(height: AppTheme.spaceXS),
+              Text(
+                'Speak their language',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.text.withValues(alpha: 0.7),
+                    ),
+              ),
+              const SizedBox(height: AppTheme.spaceLG),
+              const SizedBox(
+                width: 28,
+                height: 28,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                ),
+              ),
+            ],
           ),
         ),
       ),

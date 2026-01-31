@@ -57,35 +57,35 @@ class AppTheme {
         onSurface: text,
       ),
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.righteous(
+        displayLarge: GoogleFonts.varelaRound(
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        displayMedium: GoogleFonts.righteous(
+        displayMedium: GoogleFonts.varelaRound(
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        displaySmall: GoogleFonts.righteous(
+        displaySmall: GoogleFonts.varelaRound(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        headlineMedium: GoogleFonts.righteous(
+        headlineMedium: GoogleFonts.varelaRound(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: text,
         ),
-        bodyLarge: GoogleFonts.poppins(
+        bodyLarge: GoogleFonts.nunitoSans(
           fontSize: 16,
           color: text,
         ),
-        bodyMedium: GoogleFonts.poppins(
+        bodyMedium: GoogleFonts.nunitoSans(
           fontSize: 14,
           color: text,
         ),
-        labelLarge: GoogleFonts.poppins(
+        labelLarge: GoogleFonts.nunitoSans(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: white,
@@ -120,7 +120,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.nunitoSans(
             fontWeight: FontWeight.w600,
             fontSize: 16,
           ),
@@ -131,7 +131,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: cta,
-          textStyle: GoogleFonts.openSans(
+          textStyle: GoogleFonts.nunitoSans(
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),

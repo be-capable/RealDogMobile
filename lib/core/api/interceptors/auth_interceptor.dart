@@ -4,6 +4,7 @@ import '../../storage/storage_service.dart';
 class AuthInterceptor extends QueuedInterceptor {
   final StorageService _storage;
   final Dio _dio;
+  final Future<void> Function() _onUnauthorized;
   
   // Concurrency Lock handled by QueuedInterceptor?
   // Actually QueuedInterceptor queues requests but we need to handle the refresh specifically.
@@ -15,7 +16,7 @@ class AuthInterceptor extends QueuedInterceptor {
   // subsequent requests are queued until we resolve the handler.
   // So we don't need a manual `isRefreshing` bool if we rely on QueuedInterceptor correctly.
   
-  AuthInterceptor(this._storage, this._dio);
+  AuthInterceptor(this._storage, this._dio, this._onUnauthorized);
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -32,7 +33,7 @@ class AuthInterceptor extends QueuedInterceptor {
       // Check if we have a refresh token
       final refreshToken = await _storage.getRefreshToken();
       if (refreshToken == null) {
-        // No RT, just fail
+        await _onUnauthorized();
         return handler.next(err);
       }
 
@@ -84,10 +85,7 @@ class AuthInterceptor extends QueuedInterceptor {
           }
         }
       } catch (e) {
-        // Refresh failed (Network or 403)
-        // Clear tokens
-        await _storage.deleteAll();
-        // Propagate error (UI should listen to this or storage changes to logout)
+        await _onUnauthorized();
       }
     }
     super.onError(err, handler);

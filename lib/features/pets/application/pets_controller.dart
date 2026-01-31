@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/pets_repository.dart';
 import '../domain/pet_model.dart';
+import 'selected_pet_controller.dart';
 
 final petsControllerProvider = AsyncNotifierProvider<PetsController, List<Pet>>(PetsController.new);
 
@@ -38,6 +39,9 @@ class PetsController extends AsyncNotifier<List<Pet>> {
       }
 
       // 3. Return updated list
+      await ref.read(selectedPetControllerProvider.notifier).setSelectedPet(
+            SelectedPetSelection(id: pet.id, name: pet.name),
+          );
       return repository.getPets();
     });
   }
@@ -47,6 +51,10 @@ class PetsController extends AsyncNotifier<List<Pet>> {
     state = await AsyncValue.guard(() async {
       final repository = ref.read(petsRepositoryProvider);
       await repository.deletePet(id);
+      final selected = ref.read(selectedPetControllerProvider).value;
+      if (selected?.id == id) {
+        await ref.read(selectedPetControllerProvider.notifier).clear();
+      }
       return repository.getPets();
     });
   }

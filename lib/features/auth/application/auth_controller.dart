@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/auth/auth_session.dart';
 import '../data/auth_repository.dart';
 
 final authControllerProvider = AsyncNotifierProvider<AuthController, void>(AuthController.new);
@@ -12,17 +13,34 @@ class AuthController extends AsyncNotifier<void> {
 
   Future<void> login(String email, String password) async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).login(email, password));
+    state = await AsyncValue.guard(() async {
+      final tokens = await ref.read(authRepositoryProvider).login(email, password);
+      await ref.read(authSessionProvider.notifier).setTokens(
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+          );
+    });
   }
 
   Future<void> register(String email, String password) async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).register(email, password));
+    state = await AsyncValue.guard(() async {
+      final tokens = await ref.read(authRepositoryProvider).register(email, password);
+      await ref.read(authSessionProvider.notifier).setTokens(
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+          );
+    });
   }
 
   Future<void> logout() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).logout());
+    state = await AsyncValue.guard(() async {
+      try {
+        await ref.read(authRepositoryProvider).logout();
+      } catch (_) {}
+      await ref.read(authSessionProvider.notifier).clear();
+    });
   }
 
   Future<void> forgotPassword(String email) async {

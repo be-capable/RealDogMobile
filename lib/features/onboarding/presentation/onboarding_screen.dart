@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/storage/storage_service.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/widgets/clay_container.dart';
@@ -15,17 +16,17 @@ class OnboardingScreen extends HookConsumerWidget {
     final pageIndex = useState<int>(0);
     final steps = [
       (
-        icon: Icons.pets,
+        icon: Image.asset('assets/images/app_icon_512.png', fit: BoxFit.cover),
         title: 'Welcome to RealDog',
         subtitle: 'Understand what your dog is trying to say.',
       ),
       (
-        icon: Icons.add_circle_outline,
+        icon: SvgPicture.asset('assets/icons/rd_paw.svg'),
         title: 'Create a profile',
         subtitle: 'Add your dog and personalize the experience.',
       ),
       (
-        icon: Icons.graphic_eq,
+        icon: SvgPicture.asset('assets/icons/rd_translate.svg'),
         title: 'Track moments',
         subtitle: 'Log events and learn patterns over time.',
       ),
@@ -35,7 +36,7 @@ class OnboardingScreen extends HookConsumerWidget {
       final storage = ref.read(storageServiceProvider);
       await storage.setHasSeenOnboarding(true);
       if (!context.mounted) return;
-      context.go('/pets');
+      context.go('/translate');
     }
 
     final isLast = pageIndex.value == steps.length - 1;
@@ -76,7 +77,16 @@ class OnboardingScreen extends HookConsumerWidget {
                               height: 96,
                               borderRadius: 48,
                               color: AppTheme.white,
-                              child: Icon(step.icon, size: 48, color: AppTheme.primary),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 56,
+                                    height: 56,
+                                    child: step.icon,
+                                  ),
+                                ),
+                              ),
                             ),
                             const SizedBox(height: AppTheme.spaceLG),
                             Text(

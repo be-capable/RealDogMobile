@@ -34,7 +34,7 @@ class LoginScreen extends HookConsumerWidget {
           final storage = ref.read(storageServiceProvider);
           final hasSeenOnboarding = await storage.getHasSeenOnboarding();
           if (!context.mounted) return;
-          context.go(hasSeenOnboarding ? '/pets' : '/onboarding');
+          context.go(hasSeenOnboarding ? '/translate' : '/onboarding');
         }();
       }
     });
@@ -53,7 +53,13 @@ class LoginScreen extends HookConsumerWidget {
                   height: 100,
                   borderRadius: 50,
                   color: AppTheme.white,
-                  child: const Icon(Icons.pets, size: 50, color: AppTheme.primary),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      'assets/images/app_icon_512.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 )
                 .animate()
                 .scale(duration: 600.ms, curve: Curves.elasticOut),
