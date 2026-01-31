@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Colors
-  static const Color primary = Color(0xFFE11D48);
-  static const Color secondary = Color(0xFFFB7185);
-  static const Color cta = Color(0xFF2563EB);
-  static const Color background = Color(0xFFFFF1F2);
-  static const Color text = Color(0xFF881337);
+  static const Color primary = Color(0xFFF97316); // Vibrant Orange
+  static const Color secondary = Color(0xFFFDBA74); // Soft Orange/Yellow
+  static const Color cta = Color(0xFF2563EB); // Royal Blue
+  static const Color background = Color(0xFFFFF7ED); // Warm Beige
+  static const Color text = Color(0xFF1F2937); // Dark Grey/Brown
   static const Color inputBorder = Color(0xFFE2E8F0);
   static const Color white = Colors.white;
 
@@ -57,35 +57,35 @@ class AppTheme {
         onSurface: text,
       ),
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.poppins(
+        displayLarge: GoogleFonts.righteous(
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        displayMedium: GoogleFonts.poppins(
+        displayMedium: GoogleFonts.righteous(
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        displaySmall: GoogleFonts.poppins(
+        displaySmall: GoogleFonts.righteous(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: text,
         ),
-        headlineMedium: GoogleFonts.poppins(
+        headlineMedium: GoogleFonts.righteous(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: text,
         ),
-        bodyLarge: GoogleFonts.openSans(
+        bodyLarge: GoogleFonts.poppins(
           fontSize: 16,
           color: text,
         ),
-        bodyMedium: GoogleFonts.openSans(
+        bodyMedium: GoogleFonts.poppins(
           fontSize: 14,
           color: text,
         ),
-        labelLarge: GoogleFonts.openSans(
+        labelLarge: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: white,
@@ -94,37 +94,38 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: inputBorder),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: inputBorder, width: 2),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: inputBorder),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: inputBorder, width: 2),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: primary, width: 2),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: primary, width: 3),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: cta,
           foregroundColor: white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: GoogleFonts.openSans(
+          textStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 16,
           ),
-          elevation: 2,
+          elevation: 4,
+          shadowColor: cta.withValues(alpha: 0.4),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
